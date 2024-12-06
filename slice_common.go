@@ -8,6 +8,7 @@ import (
 )
 
 var quotes = []rune{'"', '\'', '`'}
+const escape_char='\\'
 
 func isQuote(char rune) (bool, rune) {
 	for _, quote := range quotes {
@@ -21,7 +22,13 @@ func isQuote(char rune) (bool, rune) {
 func searchPart(value string, stop rune) (bool, string) {
 	var result string
 	for _, char := range value {
-		if char != stop {
+		escape := false
+		if escape {
+			result += string(char)
+			escape = false
+		} else if char == escape_char {
+			escape = true
+		} else if char != stop {
 			result += string(char)
 		} else {
 			return true, result
